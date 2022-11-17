@@ -1,5 +1,6 @@
 package com.example.gd8_c_0914
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity() {
         svMahasiswa = findViewById(R.id.sv_mahasiswa)
 
         srMahasiswa?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { allMahasiswa() })
-        svMahasiswa?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(s: String?): Boolean {
+        svMahasiswa?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(s: String): Boolean {
                 return false
             }
 
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     fun deleteMahasiswa(id: Long) {
         setLoading(true)
         val stringRequest : StringRequest = object :
-            StringRequest(Method.DELETE, MahasiswaApi.DELETE_URL, Response.Listener {response ->
+            StringRequest(Method.DELETE, MahasiswaApi.DELETE_URL + id, Response.Listener {response ->
                 setLoading(false)
                 val gson = Gson()
                 var mahasiswa = gson.fromJson(response, Mahasiswa::class.java)
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == LAUNCH_ADD_ACTIVITY && resultCode == RESULT_OK) allMahasiswa()
+        if(requestCode == LAUNCH_ADD_ACTIVITY && resultCode == Activity.RESULT_OK) allMahasiswa()
     }
 
     private fun setLoading(isLoading: Boolean) {
